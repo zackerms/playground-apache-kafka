@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Event Sender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .event-form {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>イベント送信フォーム</h1>
+    <div class="event-form">
+        <div class="form-group">
+            <label for="eventType">イベントタイプ:</label>
+            <input type="text" id="eventType" name="eventType">
+        </div>
+        <div class="form-group">
+            <label for="eventData">イベントデータ(JSON)</label>
+            <textarea id="eventData" name="eventData" rows="4"></textarea>
+        </div>
+        <button onclick="sendEvent()">送信</button>
+    </div>
+    <div id="response"></div>
+
+    <script>
+        async function sendEvent() {
+            const eventType = document.getElementById('eventType').value;
+            const eventData = document.getElementById('eventData').value;
+
+            try {
+                const eventPayload = {
+                    type: eventType,
+                    data: JSON.parse(eventData)
+                };
+
+                const response = await fetch('http://localhost:8000/send-event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(eventPayload)
+                });
+
+                const result = await response.json();
+
+                const responseDiv = document.getElementById('response');
+                if (response.ok) {
+                    responseDiv.className = 'success';
+                    responseDiv.textContent = '成功: イベントが送信されました';
+                } else {
+                    responseDiv.className = 'error';
+                    responseDiv.textContent = 'エラー: ' + result.detail;
+                }
+            } catch (error) {
+                const responseDiv = document.getElementById('response');
+                responseDiv.className = 'error';
+                responseDiv.textContent = 'エラー: ' + error.message;
+            }
+        }
+    </script>
+</body>
+
+</html>
