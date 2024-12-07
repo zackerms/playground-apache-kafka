@@ -84,5 +84,9 @@ ab -n 1000 -c 50 \
 ### Dockerイメージのビルド
 ```bash
 docker build -t kafka-loadtest ./loadtest
-docker run --network host kafka-loadtest
+docker run --network host \
+    -e REQUESTS=1000 \
+    -e CONCURRENCY=50 \
+    -e KAFKA_BROKER=-http://localhost:8000/send-event \
+    kafka-loadtest
 ```

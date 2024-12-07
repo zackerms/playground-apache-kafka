@@ -18,4 +18,4 @@ ENTRYPOINT ab -n ${REQUESTS} \
               -T application/json \
               -k \
               -r \
-              ${TARGET_URL:-http://localhost:8000/send-event}
+              ${TARGET_URL}
