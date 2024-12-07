@@ -1,0 +1,8 @@
+{
+    "type": "test_event",
+    "data": {
+      "user_id": 123,
+      "action": "page_view",
+      "timestamp": "2024-12-07T10:00:00Z"
+    }
+  }

@@ -66,3 +66,23 @@ flowchart LR
 ### ZooKeeper（または KRaft）
 - Kafkaクラスターの管理  
 - 新しいバージョンではKRaftに移行中
+
+## 負荷テスト
+- Apache Benchmaarkを利用
+
+基本的な使い方
+```bash
+echo '{"type":"test_event","data":{"user_id":123}}' > test.json
+
+# abコマンドで負荷テスト実行
+ab -n 1000 -c 50 \
+  -p test.json \
+  -T application/json \
+  http://localhost:8000/send-event
+```
+
+### Dockerイメージのビルド
+```bash
+docker build -t kafka-loadtest ./loadtest
+docker run --network host kafka-loadtest
+```
