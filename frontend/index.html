@@ -83,7 +83,7 @@
                     data: JSON.parse(eventData)
                 };
 
-                const response = await fetch('http://localhost:8000/send-event', {
+                const response = await fetch('http://localhost:8000/send-event/kafka', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -4,6 +4,7 @@ import os
 import csv
 import datetime
 import time
+from app.data import write_log_data
 
 def start_consumer():
     consumer = KafkaConsumer(
@@ -20,20 +21,10 @@ def start_consumer():
         try:
             print(f"Received message: {message.value}")
             # ファイルがない場合は新規作成
-            log_file_path = os.path.join("logs", "events.csv") 
-            if not os.path.exists(log_file_path):
-                with open(log_file_path, mode='w') as f:
-                    writer = csv.writer(f)
-                    writer.writerow(["timestamp", "type", "data"])
-
-            # ログファイルに書き込み
-            with open(log_file_path, mode='a') as f:
-                writer = csv.writer(f)
-                writer.writerow([
-                    datetime.datetime.now().isoformat(),
-                    message.value.get("type", "unknown"),
-                    message.value.get("data", "unknown")
-                ])
+            write_log_data(
+                event_type=message.value.get("type", "unknown"), 
+                event_data=message.value.get("data", "unknown"),
+            )
         except Exception as e:
             print(f"Error processing message: {e}")
 

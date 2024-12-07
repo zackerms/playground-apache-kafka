@@ -2,7 +2,7 @@
 
 ## Getting Started
 ```bash
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
 ### ログを表示
@@ -15,7 +15,7 @@ docker compose logs backend
 
 ### 停止
 ```bash
-docker-compose down -v  
+docker compose down -v  
 ```
 
 ## 構成要素
@@ -84,9 +84,17 @@ ab -n 1000 -c 50 \
 ### Dockerイメージのビルド
 ```bash
 docker build -t kafka-loadtest ./loadtest
+
+# kafka
 docker run --network host \
-    -e REQUESTS=1000 \
+    -e REQUESTS=10000 \
     -e CONCURRENCY=50 \
-    -e KAFKA_BROKER=-http://localhost:8000/send-event \
+    -e TARGET_URL=http://localhost:8000/send-event/kafka \
+    kafka-loadtest
+
+docker run --network host \
+    -e REQUESTS=10000 \
+    -e CONCURRENCY=50 \
+    -e TARGET_URL=http://localhost:8000/send-event/direct \
     kafka-loadtest
 ```
