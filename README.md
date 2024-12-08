@@ -2,7 +2,7 @@
 
 ## Getting Started
 ```bash
-docker compose up --build -d
+KAFKA_NUM_PARTITIONS=3 docker compose up --build -d
 ```
 
 ### ログを表示
@@ -16,6 +16,11 @@ docker compose logs backend
 ### 停止
 ```bash
 docker compose down -v  
+```
+
+### Consumerをスケーリング
+```bash
+docker compose up --scale consumer=3
 ```
 
 ## 構成要素
@@ -86,13 +91,13 @@ ab -n 1000 -c 50 \
 docker build -t kafka-loadtest ./loadtest
 
 # kafka
-docker run --network host \
+docker run --rm --network host \
     -e REQUESTS=10000 \
     -e CONCURRENCY=50 \
     -e TARGET_URL=http://localhost:8000/send-event/kafka \
     kafka-loadtest
 
-docker run --network host \
+docker run --rm --network host \
     -e REQUESTS=10000 \
     -e CONCURRENCY=50 \
     -e TARGET_URL=http://localhost:8000/send-event/direct \

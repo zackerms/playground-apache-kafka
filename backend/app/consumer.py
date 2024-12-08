@@ -24,6 +24,7 @@ def start_consumer():
             write_log_data(
                 event_type=message.value.get("type", "unknown"), 
                 event_data=message.value.get("data", "unknown"),
+                source=f"kafka-{message.partition}"
             )
         except Exception as e:
             print(f"Error processing message: {e}")
@@ -35,4 +36,5 @@ if __name__ == "__main__":
         try:
             start_consumer()
         except Exception as e:
-            time.sleep(5)
+            time.sleep(1000 * 0.1)
+            pass

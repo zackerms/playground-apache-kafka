@@ -19,7 +19,7 @@ app.add_middleware(
 # Kafka Producerの設定
 producer = KafkaProducer(
     bootstrap_servers=os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+    value_serializer=lambda v: json.dumps(v).encode('utf-8'),
 )
 
 @app.post("/send-event/kafka")
@@ -38,6 +38,7 @@ async def send_event_direct(event_data: dict):
         write_log_data(
             event_type=event_data.get("type", "unknown"), 
             event_data=event_data.get("data", "unknown"),    
+            source="direct"
         )
         return {"status": "success", "message": "Event sent to Kafka"}
     except Exception as e:
